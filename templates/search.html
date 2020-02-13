@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询封面</title>
+</head>
+<body>
+
+<input type="number" placeholder="请输入AV号" id="av">
+<br>
+<input id="search_button" type="button" value="查询">
+<br>
+<input id="imgurl" type="url" style="width: 600px; height: 30px">
+<br>
+<a href="https://www.bilibili.com/" id="a_img_url">https://www.bilibili.com/</a>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#search_button").click(function () {
+            $("#imgurl").val("");
+
+            av_id = $("#av").val();
+
+            if (av_id){
+                let url = "search";
+                req_data = {'av_id': av_id};
+
+                {#发送ajax请求#}
+                $.getJSON(url, req_data, function (data) {
+                    if (data["code"] == 200){
+                        $("#imgurl").val(data['img_url']);
+                        $("#a_img_url").attr("href", data['img_url']);
+                        $("#a_img_url").text(data['img_url'])
+                    }
+                    else if (data["code"] == 300){
+                        $("#imgurl").val(data['message']);
+                        $("#a_img_url").attr("href", "https://www.bilibili.com/");
+                        $("#a_img_url").text("https://www.bilibili.com/")
+                    }
+                    else {
+                        $("#imgurl").val("服务器网络异常");
+                        $("#a_img_url").attr("href", "https://www.bilibili.com/");
+                        $("#a_img_url").text("https://www.bilibili.com/")
+                    }
+                })
+
+            }
+            else {
+                $("#imgurl").val("请输入AV号")
+            }
+    })
+    })
+</script>
+
+</body>
+</html>
